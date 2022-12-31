@@ -11,7 +11,7 @@ const {
 
 const {
   addContactSchema,
-  putContctSchema,
+  putContactSchema,
 } = require("../../validation/schemasContacts")
 
 const router = express.Router()
@@ -29,6 +29,7 @@ router.get("/:contactId", async (req, res, next) => {
 
   if (!contactById) {
     res.status(404).json({ message: "Not found" })
+    return
   }
 
   res.status(200).json(contactById)
@@ -55,24 +56,22 @@ router.post("/", async (req, res, next) => {
 })
 
 // @ DELETE /api/contacts/:id
-// ! обробити помилку при відсутності контакту
 router.delete("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
   const response = await removeContact(contactId)
 
   if (!response) {
     res.status(404).json({ message: "Not found" })
-    console.log("response", response)
+    return
   }
 
   res.status(200).json({ message: "contact deleted" })
-  console.log("response", response)
 })
 
 // @ PUT /api/contacts/:id
 router.put("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
-  const { error } = putContctSchema.validate(req.body)
+  const { error } = putContactSchema.validate(req.body)
   if (error) {
     res.status(400).json({ message: "validation error" })
     return

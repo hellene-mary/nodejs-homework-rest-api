@@ -6,7 +6,7 @@ const addContactSchema = Joi.object({
   phone: Joi.required(),
 }).required()
 
-const putContctSchema = Joi.object({
+const putContactSchema = Joi.object({
   name: Joi.string().min(2),
   email: Joi.string().email(),
   phone: Joi.string(),
@@ -14,5 +14,5 @@ const putContctSchema = Joi.object({
 
 module.exports = {
   addContactSchema,
-  putContctSchema,
+  putContactSchema,
 }
