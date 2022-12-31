@@ -1,8 +1,21 @@
-// const fs = require('fs/promises')
+const fs = require("fs/promises")
+const path = require("path")
+const dbPath = path.resolve(__dirname, "contacts.json")
 
-const listContacts = async () => {}
+async function readDb() {
+  const dbRaw = await fs.readFile(dbPath)
+  const db = JSON.parse(dbRaw)
+  return db
+}
 
-const getContactById = async (contactId) => {}
+const listContacts = async () => {
+  return await readDb()
+}
+
+const getContactById = async (contactId) => {
+  const contacts = await readDb()
+  return contacts.find((contact) => contact.id === contactId)
+}
 
 const removeContact = async (contactId) => {}
 
