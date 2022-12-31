@@ -17,7 +17,10 @@ const getContactById = async (contactId) => {
   return contacts.find((contact) => contact.id === contactId)
 }
 
-const removeContact = async (contactId) => {}
+const removeContact = async (contactId) => {
+  const contacts = await readDb()
+  return contacts.find((contact) => contact.id === contactId)
+}
 
 const addContact = async (body) => {
   const contacts = await readDb()

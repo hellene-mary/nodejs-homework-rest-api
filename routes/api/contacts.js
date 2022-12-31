@@ -5,6 +5,7 @@ const {
   listContacts,
   getContactById,
   addContact,
+  removeContact,
 } = require("../../models/contacts")
 
 const { addContactSchema } = require("../../validation/schemasContacts")
@@ -18,7 +19,6 @@ router.get("/", async (req, res, next) => {
 })
 
 // @ GET /api/contacts/:id
-// !Не отримує body
 router.get("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
   const contactById = await getContactById(contactId)
@@ -50,8 +50,16 @@ router.post("/", async (req, res, next) => {
   res.status(201).json(body)
 })
 
+// @ DELETE /api/contacts/:id
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" })
+  const { contactId } = req.params
+  const contactById = await removeContact(contactId)
+
+  if (!contactById) {
+    res.status(404).json({ message: "Not found" })
+  }
+
+  res.status(200).json({ message: "contact deleted" })
 })
 
 router.put("/:contactId", async (req, res, next) => {
