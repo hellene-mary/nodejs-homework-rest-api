@@ -19,7 +19,15 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
   const contacts = await readDb()
-  return contacts.find((contact) => contact.id === contactId)
+  const contactById = contacts.find((contact) => contact.id === contactId)
+  if (!contactById) {
+    return null
+  }
+  await fs.writeFile(
+    dbPath,
+    JSON.stringify(contacts.filter((contact) => contact.id !== contactId))
+  )
+  return contactById
 }
 
 const addContact = async (body) => {
@@ -31,7 +39,21 @@ const addContact = async (body) => {
   return body
 }
 
-const updateContact = async (contactId, body) => {}
+const updateContact = async (contactId, body) => {
+  const contacts = await readDb()
+  const contactById = contacts.find((contact) => contact.id === contactId)
+
+  if (!contactById) {
+    return null
+  }
+
+  const upContact = { ...contactById, ...body }
+  const index = contacts.findIndex((contact) => contact.id === contactId)
+
+  contacts.splice(index, 1, upContact)
+  await fs.writeFile(dbPath, JSON.stringify(contacts))
+  return upContact
+}
 
 module.exports = {
   listContacts,
