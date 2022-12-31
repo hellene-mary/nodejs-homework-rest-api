@@ -19,7 +19,14 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {}
 
-const addContact = async (body) => {}
+const addContact = async (body) => {
+  const contacts = await readDb()
+
+  contacts.push(body)
+
+  await fs.writeFile(dbPath, JSON.stringify(contacts))
+  return body
+}
 
 const updateContact = async (contactId, body) => {}
 

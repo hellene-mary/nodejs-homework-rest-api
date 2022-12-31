@@ -1,12 +1,13 @@
 const express = require("express")
-const { listContacts, getContactById } = require("../../models/contacts")
-// const {
-//   listContacts,
-//   getContactById,
-//   removeContact,
-//   addContact,
-//   updateContact,
-// } = require('../../models/contacts')
+const { nanoid } = require("nanoid")
+
+const {
+  listContacts,
+  getContactById,
+  addContact,
+} = require("../../models/contacts")
+
+const { addContactSchema } = require("../../validation/schemasContacts")
 
 const router = express.Router()
 
@@ -29,8 +30,24 @@ router.get("/:contactId", async (req, res, next) => {
   res.status(200).json(contactById)
 })
 
+// @ POST /api/contacts
 router.post("/", async (req, res, next) => {
-  res.json({ message: "template message" })
+  const { error } = addContactSchema.validate(req.body)
+  if (error) {
+    res.status(400).json({ message: "missing required name field" })
+    return
+  }
+
+  const { name, email, phone } = req.body
+  const body = {
+    id: nanoid(),
+    name: name,
+    email: email,
+    phone: phone,
+  }
+  addContact(body)
+
+  res.status(201).json(body)
 })
 
 router.delete("/:contactId", async (req, res, next) => {
