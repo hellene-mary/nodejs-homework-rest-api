@@ -9,7 +9,10 @@ const {
   updateContact,
 } = require("../../models/contacts")
 
-const { addContactSchema } = require("../../validation/schemasContacts")
+const {
+  addContactSchema,
+  putContctSchema,
+} = require("../../validation/schemasContacts")
 
 const router = express.Router()
 
@@ -56,23 +59,24 @@ router.post("/", async (req, res, next) => {
 router.delete("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
   const response = await removeContact(contactId)
-  console.log("response", response)
 
-  if (response === false) {
+  if (!response) {
     res.status(404).json({ message: "Not found" })
+    console.log("response", response)
   }
 
   res.status(200).json({ message: "contact deleted" })
+  console.log("response", response)
 })
 
 // @ PUT /api/contacts/:id
-// Отримує параметр id
-// Отримує body в json-форматі c оновленням будь-яких полів name, email и phone
-// Якщо body немає, повертає json з ключем {"message": "missing fields"} і статусом 400
-// Якщо з body всі добре, викликає функцію updateContact(contactId, body). (Напиши її) для поновлення контакту в файлі contacts.json
-// За результатом роботи функції повертає оновлений об'єкт контакту і статусом 200. В іншому випадку, повертає json з ключем "message": "Not found" і статусом 404
 router.put("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
+  const { error } = putContctSchema.validate(req.body)
+  if (error) {
+    res.status(400).json({ message: "validation error" })
+    return
+  }
 
   if (Object.keys(req.body).length === 0) {
     res.status(400).json({ message: "missing fields" })
@@ -82,6 +86,7 @@ router.put("/:contactId", async (req, res, next) => {
   const response = await updateContact(contactId, req.body)
   if (!response) {
     res.status(404).json({ message: "Not found" })
+    return
   }
   res.status(200).json(response)
 })
