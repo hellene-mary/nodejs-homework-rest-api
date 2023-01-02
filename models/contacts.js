@@ -4,8 +4,7 @@ const dbPath = path.resolve(__dirname, "contacts.json")
 
 async function readDb() {
   const dbRaw = await fs.readFile(dbPath)
-  const db = JSON.parse(dbRaw)
-  return db
+  return JSON.parse(dbRaw)
 }
 
 const listContacts = async () => {
@@ -29,14 +28,12 @@ const addContact = async (body) => {
 const removeContact = async (contactId) => {
   const contacts = await readDb()
   const contactById = contacts.find((contact) => contact.id === contactId)
-  if (!contactById) {
-    return null
-  }
+
   await fs.writeFile(
     dbPath,
     JSON.stringify(contacts.filter((contact) => contact.id !== contactId))
   )
-  return contactById
+  return contactById || null
 }
 
 const updateContact = async (contactId, body) => {
