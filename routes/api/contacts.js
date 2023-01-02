@@ -16,13 +16,11 @@ const {
 
 const router = express.Router()
 
-// @ GET /api/contacts
 router.get("/", async (req, res, next) => {
   const allContacts = await listContacts()
   res.status(200).json(allContacts)
 })
 
-// @ GET /api/contacts/:id
 router.get("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
   const contactById = await getContactById(contactId)
@@ -35,7 +33,6 @@ router.get("/:contactId", async (req, res, next) => {
   res.status(200).json(contactById)
 })
 
-// @ POST /api/contacts
 router.post("/", async (req, res, next) => {
   const { error } = addContactSchema.validate(req.body)
   if (error) {
@@ -55,7 +52,6 @@ router.post("/", async (req, res, next) => {
   res.status(201).json(body)
 })
 
-// @ DELETE /api/contacts/:id
 router.delete("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
   const response = await removeContact(contactId)
@@ -68,7 +64,6 @@ router.delete("/:contactId", async (req, res, next) => {
   res.status(200).json({ message: "contact deleted" })
 })
 
-// @ PUT /api/contacts/:id
 router.put("/:contactId", async (req, res, next) => {
   const { contactId } = req.params
   const { error } = putContactSchema.validate(req.body)

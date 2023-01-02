@@ -17,6 +17,15 @@ const getContactById = async (contactId) => {
   return contacts.find((contact) => contact.id === contactId)
 }
 
+const addContact = async (body) => {
+  const contacts = await readDb()
+
+  contacts.push(body)
+
+  await fs.writeFile(dbPath, JSON.stringify(contacts))
+  return body
+}
+
 const removeContact = async (contactId) => {
   const contacts = await readDb()
   const contactById = contacts.find((contact) => contact.id === contactId)
@@ -30,21 +39,12 @@ const removeContact = async (contactId) => {
   return contactById
 }
 
-const addContact = async (body) => {
-  const contacts = await readDb()
-
-  contacts.push(body)
-
-  await fs.writeFile(dbPath, JSON.stringify(contacts))
-  return body
-}
-
 const updateContact = async (contactId, body) => {
   const contacts = await readDb()
   const contactById = contacts.find((contact) => contact.id === contactId)
 
   if (!contactById) {
-    return null
+    return
   }
 
   const upContact = { ...contactById, ...body }
