@@ -1,3 +1,5 @@
+const { HttpError } = require("../helpers/helpers")
+
 function validateNewContact(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body)
@@ -13,7 +15,7 @@ function validateUpdateContact(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body)
     if (error) {
-      return res.status(400).json({ message: "missing fields" })
+      return next(HttpError(400, error.message))
     }
 
     return next()

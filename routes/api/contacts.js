@@ -17,18 +17,23 @@ const {
   addContactSchema,
   putContactSchema,
 } = require("../../validation/schemasContacts")
+const { tryCatchWrapper } = require("../../helpers/helpers")
 
 const router = express.Router()
 
-router.get("/", getAllContacts)
-router.get("/:contactId", getContactById)
-router.post("/", validateNewContact(addContactSchema), addContact)
-router.delete("/:contactId", removeContact)
+router.get("/", tryCatchWrapper(getAllContacts))
+router.get("/:contactId", tryCatchWrapper(getContactById))
+router.post(
+  "/",
+  validateNewContact(addContactSchema),
+  tryCatchWrapper(addContact)
+)
+router.delete("/:contactId", tryCatchWrapper(removeContact))
 router.put(
   "/:contactId",
   validateUpdateContact(putContactSchema),
-  updateContact
+  tryCatchWrapper(updateContact)
 )
-router.patch("/:contactId/favorite", updateStatusContact)
+router.patch("/:contactId/favorite", tryCatchWrapper(updateStatusContact))
 
 module.exports = router
