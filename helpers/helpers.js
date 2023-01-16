@@ -8,13 +8,14 @@ function tryCatchWrapper(enpointFn) {
   }
 }
 
-function HttpError(status, message) {
-  const err = new Error(message)
-  err.status = status
-  return err
+class ValidationError extends Error {
+  constructor(message) {
+    super(message) // (1)
+    this.name = "ValidationError" // (2)
+  }
 }
 
 module.exports = {
   tryCatchWrapper,
-  HttpError,
+  ValidationError,
 }
