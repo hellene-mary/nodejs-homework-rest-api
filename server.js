@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 mongoose.set("strictQuery", true)
 
-mongoose.set("debug", true) // enable logging
+mongoose.set("debug", true)
 
 const dotenv = require("dotenv")
 dotenv.config()
