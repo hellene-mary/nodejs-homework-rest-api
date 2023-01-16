@@ -1,7 +1,7 @@
 const express = require("express")
 
 const {
-  validateNewContact,
+  validateContactField,
   validateUpdateContact,
 } = require("../../middlewares/validateContacts")
 
@@ -13,9 +13,11 @@ const {
   updateContact,
   updateStatusContact,
 } = require("../../controllers/contacts.controller")
+
 const {
   addContactSchema,
   putContactSchema,
+  updateStatusSchema,
 } = require("../../validation/schemasContacts")
 const { tryCatchWrapper } = require("../../helpers/helpers")
 
@@ -25,7 +27,7 @@ router.get("/", tryCatchWrapper(getAllContacts))
 router.get("/:contactId", tryCatchWrapper(getContactById))
 router.post(
   "/",
-  validateNewContact(addContactSchema),
+  validateContactField(addContactSchema),
   tryCatchWrapper(addContact)
 )
 router.delete("/:contactId", tryCatchWrapper(removeContact))
@@ -34,6 +36,10 @@ router.put(
   validateUpdateContact(putContactSchema),
   tryCatchWrapper(updateContact)
 )
-router.patch("/:contactId/favorite", tryCatchWrapper(updateStatusContact))
+router.patch(
+  "/:contactId/favorite",
+  validateContactField(updateStatusSchema),
+  tryCatchWrapper(updateStatusContact)
+)
 
 module.exports = router

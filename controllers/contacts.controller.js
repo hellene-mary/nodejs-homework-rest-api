@@ -28,13 +28,12 @@ async function addContact(req, res) {
 
 async function removeContact(req, res) {
   const { contactId } = req.params
-  const response = await Contact.findById(contactId)
+  const response = await Contact.findByIdAndRemove(contactId)
 
   if (!response) {
     return res.status(404).json({ message: "Not found" })
   }
 
-  await Contact.findByIdAndRemove(contactId)
   return res.status(200).json({ message: "Contact deleted" })
 }
 
@@ -53,13 +52,13 @@ async function updateContact(req, res) {
 
 async function updateStatusContact(req, res) {
   const { contactId } = req.params
-  const { favorite } = req.body
+  // const { favorite } = req.body
 
-  if (!favorite) {
-    console.log("missing field favorite")
-    res.status(400).json({ message: "missing field favorite" })
-    return
-  }
+  // if (!favorite) {
+  //   console.log("missing field favorite")
+  //   res.status(400).json({ message: "missing field favorite" })
+  //   return
+  // }
 
   const upContact = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
@@ -69,7 +68,7 @@ async function updateStatusContact(req, res) {
     return res.status(404).json({ message: "Not found" })
   }
   res.status(200).json(upContact)
-  console.log("upContact", upContact)
+  // console.log("upContact", upContact)
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 const { HttpError } = require("../helpers/helpers")
 
-function validateNewContact(schema) {
+function validateContactField(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body)
     if (error) {
@@ -23,6 +23,6 @@ function validateUpdateContact(schema) {
 }
 
 module.exports = {
-  validateNewContact,
+  validateContactField,
   validateUpdateContact,
 }
