@@ -1,83 +1,45 @@
 const express = require("express")
-const { nanoid } = require("nanoid")
+
 const {
-  validateNewContact,
+  validateContactField,
   validateUpdateContact,
 } = require("../../middlewares/validateContacts")
 
 const {
-  listContacts,
+  getAllContacts,
   getContactById,
   addContact,
   removeContact,
   updateContact,
-} = require("../../models/contacts")
+  updateStatusContact,
+} = require("../../controllers/contacts.controller")
 
 const {
   addContactSchema,
   putContactSchema,
+  updateStatusSchema,
 } = require("../../validation/schemasContacts")
+const { tryCatchWrapper } = require("../../helpers/helpers")
 
 const router = express.Router()
 
-router.get("/", async (req, res, next) => {
-  const allContacts = await listContacts()
-  res.status(200).json(allContacts)
-})
-
-router.get("/:contactId", async (req, res, next) => {
-  const { contactId } = req.params
-  const contactById = await getContactById(contactId)
-
-  if (!contactById) {
-    res.status(404).json({ message: "Not found" })
-    return
-  }
-
-  res.status(200).json(contactById)
-})
-
+router.get("/", tryCatchWrapper(getAllContacts))
+router.get("/:contactId", tryCatchWrapper(getContactById))
 router.post(
   "/",
-  validateNewContact(addContactSchema),
-  async (req, res, next) => {
-    const { name, email, phone } = req.body
-    const body = {
-      id: nanoid(),
-      name: name,
-      email: email,
-      phone: phone,
-    }
-    addContact(body)
-
-    res.status(201).json(body)
-  }
+  validateContactField(addContactSchema),
+  tryCatchWrapper(addContact)
 )
-
-router.delete("/:contactId", async (req, res, next) => {
-  const { contactId } = req.params
-  const response = await removeContact(contactId)
-
-  if (!response) {
-    res.status(404).json({ message: "Not found" })
-    return
-  }
-
-  res.status(200).json({ message: "contact deleted" })
-})
-
+router.delete("/:contactId", tryCatchWrapper(removeContact))
 router.put(
   "/:contactId",
   validateUpdateContact(putContactSchema),
-  async (req, res, next) => {
-    const { contactId } = req.params
-    const response = await updateContact(contactId, req.body)
-    if (!response) {
-      res.status(404).json({ message: "Not found" })
-      return
-    }
-    res.status(200).json(response)
-  }
+  tryCatchWrapper(updateContact)
+)
+router.patch(
+  "/:contactId/favorite",
+  validateContactField(updateStatusSchema),
+  tryCatchWrapper(updateStatusContact)
 )
 
 module.exports = router

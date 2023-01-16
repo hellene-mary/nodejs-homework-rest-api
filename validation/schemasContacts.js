@@ -14,7 +14,12 @@ const putContactSchema = Joi.object({
   .min(1)
   .required()
 
+const updateStatusSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+}).required()
+
 module.exports = {
   addContactSchema,
   putContactSchema,
+  updateStatusSchema,
 }
