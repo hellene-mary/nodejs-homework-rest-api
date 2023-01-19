@@ -1,4 +1,4 @@
-function validateNewUer(schema) {
+function validateAuth(schema) {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
@@ -10,5 +10,5 @@ function validateNewUer(schema) {
 }
 
 module.exports = {
-  validateNewUer,
+  validateAuth,
 };

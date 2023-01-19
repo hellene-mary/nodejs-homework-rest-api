@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const schema = mongoose.Schema(
   {
@@ -18,17 +18,16 @@ const schema = mongoose.Schema(
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-    }
+      ref: "users",
+    },
   },
   {
     versionKey: false,
   }
+);
 
-)
-
-const Contact = mongoose.model("contacts", schema)
+const Contact = mongoose.model("contacts", schema);
 
 module.exports = {
   Contact,
-}
+};
