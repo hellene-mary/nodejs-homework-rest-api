@@ -1,10 +1,10 @@
-const Joi = require("joi")
+const Joi = require("joi");
 
-const addNewUser = Joi.object({
+const authUser = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().min(3).required()
-}).required()
+  password: Joi.string().min(3).required(),
+}).required();
 
 module.exports = {
-  addNewUser,
-}
+  authUser,
+};
