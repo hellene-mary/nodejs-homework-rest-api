@@ -52,6 +52,8 @@ async function login(req, res, next) {
   const payload = { id: storedUser._id };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "6h" });
 
+  await User.findByIdAndUpdate(storedUser._id, { token });
+
   return res.status(200).json({
     data: {
       token: token,
@@ -64,7 +66,25 @@ async function login(req, res, next) {
   });
 }
 
+async function logout(req, res, next) {
+  const storedUser = req.user;
+  // console.log("storedUser.id", storedUser._id);
+
+  try {
+    await User.findByIdAndUpdate(storedUser._id, { token: "" });
+
+    return res.status(204).jaso({
+      ok: true,
+    });
+  } catch (error) {
+    return res.json({
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   register,
   login,
+  logout,
 };

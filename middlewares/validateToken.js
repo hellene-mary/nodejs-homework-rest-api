@@ -17,7 +17,7 @@ async function validateToken(req, res, next) {
   try {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
-    console.log("user", user);
+    // console.log("user", user);
 
     req.user = user;
   } catch (error) {
