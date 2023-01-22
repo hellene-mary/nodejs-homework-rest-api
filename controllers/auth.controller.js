@@ -83,8 +83,27 @@ async function logout(req, res, next) {
   }
 }
 
+async function userInfo(req, res, next) {
+  console.log("User info");
+
+  try {
+    const user = await User.findById(req.user._id);
+    console.log("user", user);
+
+    res.status(200).json({
+      email: user.email,
+      subscription: user.subscription,
+    });
+  } catch (error) {
+    return res.json({
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   register,
   login,
   logout,
+  userInfo,
 };
