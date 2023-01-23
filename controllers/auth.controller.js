@@ -96,9 +96,22 @@ async function userInfo(req, res, next) {
   });
 }
 
+async function upSubscription(req, res, next) {
+  const { id } = req.user;
+  console.log("id", id);
+
+  const { subscription } = req.body;
+  console.log("subscription", subscription);
+
+  const upUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+
+  res.status(200).json(upUser);
+}
+
 module.exports = {
   register,
   login,
   logout,
   userInfo,
+  upSubscription,
 };
