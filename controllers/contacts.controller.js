@@ -2,14 +2,21 @@ const { Contact } = require("../models/contacts");
 
 async function getAllContacts(req, res) {
   const { id: owner } = req.user;
-  const { page = 1, limit = 20 } = req.query;
+  const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
 
   const allContacts = await Contact.find({ owner })
     .limit(Number(limit))
     .skip(Number(skip));
 
-  res.status(200).json(allContacts);
+  if (!favorite) {
+    res.status(200).json(allContacts);
+  } else {
+    const favoriteContacts = allContacts.filter(
+      (contact) => contact.favorite.toString() === favorite
+    );
+    res.status(200).json(favoriteContacts);
+  }
 }
 
 async function getContactById(req, res) {

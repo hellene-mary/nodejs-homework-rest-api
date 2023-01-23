@@ -68,7 +68,6 @@ async function login(req, res, next) {
 
 async function logout(req, res, next) {
   const storedUser = req.user;
-  // console.log("storedUser.id", storedUser._id);
 
   try {
     await User.findByIdAndUpdate(storedUser._id, { token: "" });
@@ -84,7 +83,6 @@ async function logout(req, res, next) {
 }
 
 async function userInfo(req, res, next) {
-  // console.log("User info");
   const { user } = req;
   const { email, subscription } = user;
 
