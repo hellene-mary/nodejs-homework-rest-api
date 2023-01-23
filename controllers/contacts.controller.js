@@ -2,9 +2,13 @@ const { Contact } = require("../models/contacts");
 
 async function getAllContacts(req, res) {
   const { id: owner } = req.user;
-  console.log("owner", owner);
-  console.log("req.user", req.user);
-  const allContacts = await Contact.find({ owner });
+  const { page = 1, limit = 20 } = req.query;
+  const skip = (page - 1) * limit;
+
+  const allContacts = await Contact.find({ owner })
+    .limit(Number(limit))
+    .skip(Number(skip));
+
   res.status(200).json(allContacts);
 }
 
