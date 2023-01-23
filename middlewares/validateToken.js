@@ -7,7 +7,7 @@ const { JWT_SECRET } = process.env;
 async function validateToken(req, res, next) {
   const authHeader = req.headers.authorization || "";
   const [type, token] = authHeader.split(" ");
-  console.log("token", token);
+  // console.log("token", token);
 
   // TODO check validation
   if (type !== "Bearer" || !token) {

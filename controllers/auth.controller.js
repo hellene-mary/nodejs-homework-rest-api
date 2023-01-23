@@ -84,21 +84,18 @@ async function logout(req, res, next) {
 }
 
 async function userInfo(req, res, next) {
-  console.log("User info");
+  // console.log("User info");
+  const { user } = req;
+  const { email, subscription } = user;
 
-  try {
-    const user = await User.findById(req.user._id);
-    console.log("user", user);
-
-    res.status(200).json({
-      email: user.email,
-      subscription: user.subscription,
-    });
-  } catch (error) {
-    return res.json({
-      message: error.message,
-    });
-  }
+  return res.status(200).json({
+    data: {
+      user: {
+        email,
+        subscription,
+      },
+    },
+  });
 }
 
 module.exports = {
