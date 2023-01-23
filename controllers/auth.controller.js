@@ -18,12 +18,10 @@ async function register(req, res, next) {
     });
 
     res.status(201).json({
-      data: {
-        user: {
-          email,
-          subscription: savedUser.subscription,
-          id: savedUser._id,
-        },
+      user: {
+        email,
+        subscription: savedUser.subscription,
+        id: savedUser._id,
       },
     });
   } catch (error) {
@@ -55,13 +53,11 @@ async function login(req, res, next) {
   await User.findByIdAndUpdate(storedUser._id, { token });
 
   return res.status(200).json({
-    data: {
-      token: token,
-      user: {
-        email,
-        subscription: storedUser.subscription,
-        id: storedUser._id,
-      },
+    token: token,
+    user: {
+      email,
+      subscription: storedUser.subscription,
+      id: storedUser._id,
     },
   });
 }
@@ -69,17 +65,9 @@ async function login(req, res, next) {
 async function logout(req, res, next) {
   const storedUser = req.user;
 
-  try {
-    await User.findByIdAndUpdate(storedUser._id, { token: "" });
+  await User.findByIdAndUpdate(storedUser._id, { token: "" });
 
-    return res.status(204).jaso({
-      ok: true,
-    });
-  } catch (error) {
-    return res.json({
-      message: error.message,
-    });
-  }
+  return res.status(204).end();
 }
 
 async function userInfo(req, res, next) {
@@ -87,11 +75,9 @@ async function userInfo(req, res, next) {
   const { email, subscription } = user;
 
   return res.status(200).json({
-    data: {
-      user: {
-        email,
-        subscription,
-      },
+    user: {
+      email,
+      subscription,
     },
   });
 }
