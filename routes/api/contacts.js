@@ -1,9 +1,9 @@
-const express = require("express")
+const express = require("express");
 
 const {
   validateContactField,
   validateUpdateContact,
-} = require("../../middlewares/validateContacts")
+} = require("../../middlewares/validateContacts");
 
 const {
   getAllContacts,
@@ -12,34 +12,51 @@ const {
   removeContact,
   updateContact,
   updateStatusContact,
-} = require("../../controllers/contacts.controller")
+} = require("../../controllers/contacts.controller");
 
 const {
   addContactSchema,
   putContactSchema,
   updateStatusSchema,
-} = require("../../validation/schemasContacts")
-const { tryCatchWrapper } = require("../../helpers/helpers")
+} = require("../../validationSchemas/schemasContacts");
 
-const router = express.Router()
+const { tryCatchWrapper } = require("../../helpers/helpers");
+const { validateToken } = require("../../middlewares/validateToken");
 
-router.get("/", tryCatchWrapper(getAllContacts))
-router.get("/:contactId", tryCatchWrapper(getContactById))
+const router = express.Router();
+
+router.get(
+  "/",
+  tryCatchWrapper(validateToken),
+  tryCatchWrapper(getAllContacts)
+);
+router.get(
+  "/:contactId",
+  tryCatchWrapper(validateToken),
+  tryCatchWrapper(getContactById)
+);
 router.post(
   "/",
+  tryCatchWrapper(validateToken),
   validateContactField(addContactSchema),
   tryCatchWrapper(addContact)
-)
-router.delete("/:contactId", tryCatchWrapper(removeContact))
+);
+router.delete(
+  "/:contactId",
+  tryCatchWrapper(validateToken),
+  tryCatchWrapper(removeContact)
+);
 router.put(
   "/:contactId",
+  tryCatchWrapper(validateToken),
   validateUpdateContact(putContactSchema),
   tryCatchWrapper(updateContact)
-)
+);
 router.patch(
   "/:contactId/favorite",
+  tryCatchWrapper(validateToken),
   validateContactField(updateStatusSchema),
   tryCatchWrapper(updateStatusContact)
-)
+);
 
-module.exports = router
+module.exports = router;
