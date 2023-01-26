@@ -2,6 +2,7 @@ const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const { Conflict, Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
 
 const { JWT_SECRET } = process.env;
 
@@ -15,6 +16,7 @@ async function register(req, res, next) {
     const savedUser = await User.create({
       email,
       password: hashedPassword,
+      avatarURL: gravatar.url(email),
     });
 
     res.status(201).json({
