@@ -6,6 +6,7 @@ const {
   logout,
   userInfo,
   upSubscription,
+  upAvatar,
 } = require("../../controllers/auth.controller");
 const {
   authUser,
@@ -13,6 +14,7 @@ const {
 } = require("../../validationSchemas/schemasUsers");
 const { validateAuth } = require("../../middlewares/validateAuth");
 const { validateToken } = require("../../middlewares/validateToken");
+const { upload } = require("../../middlewares/uploadAvatar");
 
 const authRouter = express.Router();
 
@@ -33,6 +35,12 @@ authRouter.patch(
   tryCatchWrapper(validateToken),
   validateAuth(upUserSubscription),
   tryCatchWrapper(upSubscription)
+);
+authRouter.patch(
+  "/avatars",
+  tryCatchWrapper(validateToken),
+  upload.single("avatar"),
+  tryCatchWrapper(upAvatar)
 );
 
 module.exports = {

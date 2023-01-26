@@ -3,6 +3,9 @@ const bcrypt = require("bcrypt");
 const { Conflict, Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
+const path = require("path");
+const fs = require("fs/promises");
+const Jimp = require("jimp");
 
 const { JWT_SECRET } = process.env;
 
@@ -24,6 +27,7 @@ async function register(req, res, next) {
         email,
         subscription: savedUser.subscription,
         id: savedUser._id,
+        avatarURL: savedUser.avatarURL,
       },
     });
   } catch (error) {
@@ -86,14 +90,49 @@ async function userInfo(req, res, next) {
 
 async function upSubscription(req, res, next) {
   const { id } = req.user;
-  console.log("id", id);
-
-  const { subscription } = req.body;
-  console.log("subscription", subscription);
 
   const upUser = await User.findByIdAndUpdate(id, req.body, { new: true });
 
   res.status(200).json(upUser);
+}
+
+async function upAvatar(req, res, next) {
+  const { id } = req.user;
+  const { filename } = req.file;
+
+  const tmpPath = path.resolve(__dirname, "../tmp", filename);
+  const publicPath = path.resolve(__dirname, "../public/avatars", filename);
+
+  await Jimp.read(tmpPath)
+    .then((image) => {
+      return image.resize(250, 250).write(tmpPath);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+
+  try {
+    await fs.rename(tmpPath, publicPath);
+  } catch (error) {
+    await fs.unlink(tmpPath);
+    throw error;
+  }
+
+  const upUser = await User.findByIdAndUpdate(
+    id,
+    {
+      avatarURL: `/public/avatars/${filename}`,
+    },
+    { new: true }
+  );
+  console.log("upUser", upUser);
+
+  return res.status(200).json({
+    user: {
+      email: upUser.email,
+      avatarURL: upUser.avatarURL,
+    },
+  });
 }
 
 module.exports = {
@@ -102,4 +141,5 @@ module.exports = {
   logout,
   userInfo,
   upSubscription,
+  upAvatar,
 };
