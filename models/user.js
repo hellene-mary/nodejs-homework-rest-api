@@ -17,6 +17,7 @@ const schema = mongoose.Schema(
       default: "starter",
     },
     token: String,
+    avatarURL: String,
   },
   {
     timestamps: true,
