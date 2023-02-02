@@ -8,6 +8,7 @@ const {
   upSubscription,
   upAvatar,
   verifyEmail,
+  repeatVerifyEmail,
 } = require("../../controllers/auth.controller");
 const {
   authUser,
@@ -44,6 +45,7 @@ authRouter.patch(
   tryCatchWrapper(upAvatar)
 );
 authRouter.get("/verify/:verificationToken", tryCatchWrapper(verifyEmail));
+authRouter.post("/verify", tryCatchWrapper(repeatVerifyEmail));
 
 module.exports = {
   authRouter,
