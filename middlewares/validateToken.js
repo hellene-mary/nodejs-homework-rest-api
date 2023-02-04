@@ -17,6 +17,13 @@ async function validateToken(req, res, next) {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
 
+    if (user.token !== token || !user.token) {
+      console.log("token not =");
+      return res.status(401).json({
+        message: "Not authorized",
+      });
+    }
+
     req.user = user;
   } catch (error) {
     if (error.name === "JsonWebTokenError") {
